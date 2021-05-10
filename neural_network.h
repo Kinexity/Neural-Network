@@ -21,10 +21,10 @@ private:
 		biases,
 		biases_err; //is equal to neuron error
 	double
-		learning_coef = 0.01;
+		learning_coef = 0.1;
 	std::function<double(double)>
-		sigmoid = [&](double x) { return std::tanh(x); },
-		sigmoid_derivate = [&](double x) { return 1 / std::pow(std::cosh(x), 2); };
+		sigmoid = [&](double x) { return (std::tanh(x) + 1) / 2; },
+		sigmoid_derivate = [&](double x) { return 1 / (2 * std::pow(std::cosh(x), 2)); };
 	std::pair<Eigen::VectorXd, Eigen::VectorXd>
 		calc_next_layer_with_z(Eigen::VectorXd data, size_t layer_index);
 	std::pair<std::vector<Eigen::VectorXd>, std::vector<Eigen::VectorXd>>

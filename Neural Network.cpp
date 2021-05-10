@@ -84,22 +84,23 @@ int main() {
 		}
 	}
 	std::cout << "Data loaded\n";
-	for (;;) {
-		neural_network nn({ img_size,20,20,10 });
-		std::cout << "Starting testing\n";
-		tc.start();
+	for (int i = 0; i < 10; i++) {
+		std::cout << "Attempt #" << i << '\n'; 
+		neural_network nn({ img_size,50,30,10 });
 		double cost = 0.;
-		for (size_t i = 0; i < test_data.size(); i++) {
-			auto& [data, label] = test_data[i];
-			auto&& res = nn.calc_result(data);
-			res[(int)label] -= 1;
-			auto l_cost = std::transform_reduce(res.begin(), res.end(), 0., std::plus<>(), [&](double x) {return x * x; });
-			cost += l_cost;
-		}
-		cost /= test_data.size();
-		tc.stop();
-		std::cout << "Average cost: " << cost << '\n';
-		std::cout << "Testing time " << tc.measured_timespan().count() << " s\n";
+		//std::cout << "Starting testing\n";
+		//tc.start();
+		//for (size_t i = 0; i < test_data.size(); i++) {
+		//	auto& [data, label] = test_data[i];
+		//	auto&& res = nn.calc_result(data);
+		//	res[(int)label] -= 1;
+		//	auto l_cost = std::transform_reduce(res.begin(), res.end(), 0., std::plus<>(), [&](double x) {return x * x; });
+		//	cost += l_cost;
+		//}
+		//cost /= test_data.size();
+		//tc.stop();
+		//std::cout << "Average cost: " << cost << '\n';
+		//std::cout << "Testing time " << tc.measured_timespan().count() << " s\n";
 		std::cout << "Starting training\n";
 		tc.start();
 		for (auto& [data, label] : train_data) {
@@ -113,8 +114,7 @@ int main() {
 		tc.start();
 		cost = 0.;
 		size_t accurate_guesses = 0;
-		for (size_t i = 0; i < test_data.size(); i++) {
-			auto& [data, label] = test_data[i];
+		for (auto& [data, label] : test_data) {
 			auto&& res = nn.calc_result(data);
 			//std::cout << "Number: " << (int)label << "	Guess:" << std::distance(res.begin(), std::max_element(res.begin(), res.end())) << '\n';
 			auto max_it = std::max_element(res.begin(), res.end());
@@ -128,6 +128,5 @@ int main() {
 		std::cout << "Average cost: " << cost << '\n';
 		std::cout << "Accurancy: " << (double)accurate_guesses / test_data.size() << '\n';
 		std::cout << "Testing time " << tc.measured_timespan().count() << " s\n\n\n\n";
-		_getch();
 	}
 }
