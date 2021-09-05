@@ -68,31 +68,6 @@ void mnist_test() {
 		L"C:\\Users\\26kub\\source\\repos\\fashion-mnist\\data\\fashion",
 		L"C:\\Users\\26kub\\source\\repos\\Neural Network\\data" ,
 		L"C:\\Users\\26kub\\source\\repos\\Neural Network\\data" };
-	//{ // load config
-	//	std::ifstream
-	//		config_file;
-	//	Json::CharReaderBuilder
-	//		prs;
-	//	const std::filesystem::path
-	//		config_file_path = L"C:\\Users\\26kuba05\\source\\repos\\Neural Network\\config.json";
-	//	std::string
-	//		config_file_buffer;
-	//	size_t
-	//		config_file_size = std::filesystem::file_size(config_file_path);
-	//	Json::Value
-	//		root;
-	//	Json::String
-	//		err_str;
-	//	config_file.open(config_file_path);
-	//	config_file_buffer.resize(config_file_size);
-	//	config_file.read(config_file_buffer.data(), config_file_size);
-	//	Json::parseFromStream(prs, config_file, &root, &err_str);
-	//	std::cout << root << '\n';
-	//	std::cout << root.type() << '\n';
-	//	std::cout << root["database"].asUInt64() << '\n';
-	//	database = root["database"].asUInt64();
-	//	_getch();
-	//}
 	{
 		std::ifstream
 			images_file,
@@ -157,42 +132,12 @@ void mnist_test() {
 		}
 		output_params = labels_map.size();
 	}
-	if (false) {
-		std::random_device rnd;
-		std::mt19937_64 mt{ rnd() };
-		std::cout << "Train sample\n";
-		std::vector<std::pair<std::vector<float>, uint8_t>> smp;
-		std::sample(train_data.begin(), train_data.end(), std::back_inserter(smp), 10, mt);
-		for (auto& [img, lb] : smp) {
-			print_img(img);
-			std::cout << (int)lb << '\n';
-		}
-		std::cout << "Test sample\n";
-		std::sample(test_data.begin(), test_data.end(), std::back_inserter(smp), 10, mt);
-		for (auto& [img, lb] : smp) {
-			print_img(img);
-			std::cout << (int)lb << '\n';
-		}
-	}
 	std::cout << "Data loaded\n";
 	auto& out = std::cout;
 	feed_forward_neural_network nn({ img_size,20,20,10,output_params });
 	for (int i = 0; i < epochs; i++) {
 		out << "Attempt #" << i << '\n';
 		double cost = 0.;
-		//out << "Starting testing\n";
-		//tc.start();
-		//for (size_t i = 0; i < test_data.size(); i++) {
-		//	auto& [data, label] = test_data[i];
-		//	auto&& res = nn.calc_result(data);
-		//	res[(int)label] -= 1;
-		//	auto l_cost = std::transform_reduce(res.begin(), res.end(), 0., std::plus<>(), [&](float x) {return x * x; });
-		//	cost += l_cost;
-		//}
-		//cost /= test_data.size();
-		//tc.stop();
-		//out << "Average cost: " << cost << '\n';
-		//out << "Testing time " << tc.measured_timespan().count() << " s\n";
 		out << "Starting training\n";
 		tc.start();
 		for (auto& [data, label] : train_data) {
@@ -209,7 +154,6 @@ void mnist_test() {
 		size_t accurate_guesses_high_conf = 0;
 		for (auto& [data, label] : test_data) {
 			auto&& res = nn.calc_result(data);
-			//out << "Number: " << (int)label << "	Guess:" << std::distance(res.begin(), std::max_element(res.begin(), res.end())) << '\n';
 			auto max_it = std::max_element(res.begin(), res.end());
 			accurate_guesses += (label == std::distance(res.begin(), max_it));
 			accurate_guesses_high_conf += (label == std::distance(res.begin(), max_it) && *max_it > 0.9);
