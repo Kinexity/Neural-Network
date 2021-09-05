@@ -167,6 +167,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <CallingConvention>FastCall</CallingConvention>
+      <AdditionalIncludeDirectories>C:\Users\26kub\source\repos\PureCPPLib\PureCPPLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,13 +178,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Neural Network.cpp" />
-    <ClCompile Include="neural_network.cpp" />
+    <ClCompile Include="feed_forward_neural_network.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C_Time_Counter.h" />
-    <ClInclude Include="neural_network.h" />
+    <ClInclude Include="feed_forward_neural_network.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="settings.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties config_1json__JsonSchema="https://json-stat.org/format/schema/2.0/" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

@@ -18,16 +18,18 @@
     <ClCompile Include="Neural Network.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="neural_network.cpp">
+    <ClCompile Include="feed_forward_neural_network.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="neural_network.h">
+    <ClInclude Include="feed_forward_neural_network.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="C_Time_Counter.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="settings.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
   </ItemGroup>
 </Project>
