@@ -2,15 +2,6 @@
 #ifndef neural_network_h
 #define neural_network_h
 #include <vector>
-#include <algorithm>
-#include <numeric>
-#include <execution>
-#include <functional>
-#include <numeric>
-#include <iostream>
-#include <random>
-#include <span>
-#include <valarray>
 #include <memory>
 #include "Layer.h"
 
