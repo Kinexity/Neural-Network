@@ -159,7 +159,7 @@ void mnist_test() {
 		size_t accurate_guesses = 0;
 		size_t accurate_guesses_high_conf = 0;
 		for (auto& [data, label] : test_data) {
-			auto&& res = nn.calc_result(data);
+			auto res = nn.calc_result(data);
 			auto max_it = std::max_element(res.begin(), res.end());
 			accurate_guesses += (label == std::distance(res.begin(), max_it));
 			accurate_guesses_high_conf += (label == std::distance(res.begin(), max_it) && *max_it > 0.9);
