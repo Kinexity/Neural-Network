@@ -134,7 +134,13 @@ void mnist_test() {
 	}
 	std::cout << "Data loaded\n";
 	auto& out = std::cout;
-	feed_forward_neural_network nn({ img_size,20,20,10,output_params });
+	feed_forward_neural_network nn({ img_size,150,output_params });
+	double 
+		previous_accurancy = 0.,
+		min_accurancy_increase = 0.001;
+	uint32_t
+		allowed_accurancy_condition_fails = 1,
+		accurancy_condition_fails_counter = 0;
 	for (int i = 0; i < epochs; i++) {
 		out << "Attempt #" << i << '\n';
 		double cost = 0.;
@@ -164,7 +170,28 @@ void mnist_test() {
 		cost /= test_data.size();
 		out << "Average cost: " << cost << '\n';
 		out << "Accurancy (high conf.): " << (double)accurate_guesses_high_conf / test_data.size() << "\n";
-		out << "Accurancy (overall): " << (double)accurate_guesses / test_data.size() << "\n\n\n";
+		auto accurancy = (double)accurate_guesses / test_data.size();
+		out << "Accurancy (overall): " << accurancy << "\n";
+		if (accurancy - previous_accurancy < min_accurancy_increase) {
+			accurancy_condition_fails_counter++;
+			out << "Negligable or no accurancy increase!" << "\n";
+		}
+		out << "\n\n";
+		if (accurancy_condition_fails_counter > allowed_accurancy_condition_fails) {
+			out << "Further retraining halted!\n";
+			break;
+		}
+		previous_accurancy = accurancy;
+	}
+	for (auto& [data, label] : test_data) {
+		auto&& res = nn.calc_result(data);
+		auto max_it = std::max_element(res.begin(), res.end());
+		auto pred = std::distance(res.begin(), max_it);
+		if (pred != label && false) {
+			print_img(data);
+			std::cout << "Expected: " << (int)label << "Prediction: " << pred;
+			_getch();
+		}
 	}
 }
 

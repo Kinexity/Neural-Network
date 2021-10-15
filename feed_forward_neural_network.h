@@ -24,12 +24,14 @@ private:
 		biases,
 		biases_err; //is equal to neuron error
 	float
-		learning_coef = 0.075;
+		learning_coef = 0.3;
 	std::function<float(float)>
 		sigmoid = [&](float x) { return 1 / (1 + std::exp(-x)); },
 		sigmoid_derivate = [&](float x) {
 		auto t = sigmoid(x);
 		return t * (1 - t); };
+	bool 
+		is_softmax = false;
 	std::pair<Eigen::VectorXf, Eigen::VectorXf>
 		calc_next_layer_with_z(Eigen::VectorXf data, size_t layer_index);
 	std::pair<std::vector<Eigen::VectorXf>, std::vector<Eigen::VectorXf>>

@@ -1,5 +1,17 @@
 #include "feed_forward_neural_network.h"
 
+Eigen::VectorXf softmax(Eigen::VectorXf vec) {
+	Eigen::VectorXf vec_exp = vec.unaryExpr([](float x) { return std::exp(x); });
+	float sum = vec_exp.sum();
+	return vec_exp / sum;
+}
+
+Eigen::VectorXf softmax_derivative(Eigen::VectorXf vec) {
+	Eigen::VectorXf vec_exp = vec.unaryExpr([](float x) { return std::exp(x); });
+	float sum = vec_exp.sum();
+	return -vec_exp.unaryExpr([](float x) { return x * x; }) / (sum * sum);
+}
+
 std::vector<float> conv_vec(Eigen::VectorXf vec) {
 	return { vec.data(), vec.data() + vec.rows() };
 }
@@ -14,7 +26,7 @@ std::vector<float> feed_forward_neural_network::calc_result(const std::vector<fl
 
 std::pair<Eigen::VectorXf, Eigen::VectorXf> feed_forward_neural_network::calc_next_layer_with_z(Eigen::VectorXf data, size_t layer_index) {
 	auto z_vec = weights[layer_index] * data - biases[layer_index];
-	auto a_vec = z_vec.unaryExpr(sigmoid);
+	auto a_vec = (!(layer_index == layer_sizes.size() - 2 && is_softmax) ? z_vec.unaryExpr(sigmoid) : softmax(z_vec));
 	return { a_vec, z_vec };
 }
 
@@ -30,7 +42,9 @@ std::pair<std::vector<Eigen::VectorXf>, std::vector<Eigen::VectorXf>> feed_forwa
 
 Eigen::VectorXf feed_forward_neural_network::calc_result_internal(Eigen::VectorXf data) const {
 	for (size_t layer_index = 0; layer_index < layer_sizes.size() - 1; layer_index++) {
-		data = (weights[layer_index] * data - biases[layer_index]).unaryExpr(sigmoid);
+		data = (!(layer_index == layer_sizes.size() - 2 && is_softmax) ?
+			(weights[layer_index] * data - biases[layer_index]).unaryExpr(sigmoid) :
+			softmax(weights[layer_sizes.size() - 2] * data - biases[layer_sizes.size() - 2]));
 	}
 	return data;
 }
@@ -54,7 +68,7 @@ void feed_forward_neural_network::train(const std::vector<float>& data, std::vec
 	auto data_eigen = conv_vec(data);
 	auto [a, z] = calc_result_with_z(data_eigen);
 	auto diff = 2 * (expected_result_eigen - a.back());
-	biases_err[biases_err.size() - 1] = diff.cwiseProduct(z.back().unaryExpr(sigmoid_derivate)) * learning_coef; //learning coef multiplication moved here for perf reasons
+	biases_err[biases_err.size() - 1] = diff.cwiseProduct(!is_softmax ? z.back().unaryExpr(sigmoid_derivate) : softmax_derivative(z.back())) * learning_coef; //learning coef multiplication moved here for perf reasons
 	for (size_t layer_index = layer_sizes.size() - 2; layer_index > 0; layer_index--) { //calculate delta/bias error
 		biases_err[layer_index - 1] = (weights[layer_index].transpose() * biases_err[layer_index]).cwiseProduct(z[layer_index].unaryExpr(sigmoid_derivate));
 	}

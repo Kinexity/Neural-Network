@@ -177,11 +177,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Neural Network.cpp" />
     <ClCompile Include="feed_forward_neural_network.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="feed_forward_neural_network.h" />
+    <ClInclude Include="Layer.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="settings.txt">
